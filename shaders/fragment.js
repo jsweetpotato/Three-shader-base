@@ -1,6 +1,4 @@
 export const fragment = `
-  precision mediump float;
-  precision mediump int;
 
   uniform float time;
 
