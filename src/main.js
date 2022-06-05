@@ -1,5 +1,6 @@
 
 import * as THREE from "three";
+import * as dat from 'dat.gui';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
 import fragment from "../shaders/fragment.glsl"
@@ -23,6 +24,7 @@ class App {
     this._setLight();
     this._setObject();
     this._setControls();
+    this._setting();
 
     // resize
     window.addEventListener("resize", this.onWindowResize.bind(this));
@@ -32,6 +34,14 @@ class App {
   }
 
   //
+
+  _setting() {
+    this.settings = {
+      progress:0,
+    }
+    const gui = new dat.GUI();
+    gui.add(this.settings, "progress", 0, 1, 0.01);
+  }
 
   _setControls() {
     this.controls = new OrbitControls(this._camera, this._container);
@@ -71,7 +81,8 @@ class App {
     // for shader
     const mat = new THREE.ShaderMaterial({
       uniforms: {
-        time: { value: 1 },
+        time: {type: "f", value: 1 },
+        progress: {type: "f", value: 0}
       },
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -100,6 +111,7 @@ class App {
 
     // shader time update
     this.mat.uniforms.time.value = performance.now();
+    this.mat.uniforms.progress.value = this.settings.progress;
   }
 
   update() {
