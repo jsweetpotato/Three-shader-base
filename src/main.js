@@ -1,10 +1,9 @@
-
 import * as THREE from "three";
-import * as dat from 'dat.gui';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import * as dat from "dat.gui";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import fragment from "../shaders/fragment.glsl"
-import vertex from "../shaders/vertex.glsl"
+import fragment from "./shaders/fragment.glsl";
+import vertex from "./shaders/vertex.glsl";
 
 class App {
   constructor() {
@@ -37,8 +36,8 @@ class App {
 
   _setting() {
     this.settings = {
-      progress:0,
-    }
+      progress: 0,
+    };
     const gui = new dat.GUI();
     gui.add(this.settings, "progress", 0, 1, 0.01);
   }
@@ -51,8 +50,8 @@ class App {
     this.controls.rotateSpeed = 0.5;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.1;
-    this.controls.autoRotateSpeed = 0.5;
-    this.controls.autoRotate = true;
+    // this.controls.autoRotateSpeed = 0.5;
+    // this.controls.autoRotate = true;
   }
 
   _setLight() {
@@ -60,7 +59,7 @@ class App {
     this._scene.add(light1);
 
     const pointLight = new THREE.PointLight(0xffaf00, 3, 100);
-    pointLight.position.set(2, 10, 8);
+    pointLight.position.set(1, 4, 3);
     this._scene.add(pointLight);
 
     const sphereSize = 1;
@@ -69,20 +68,24 @@ class App {
   }
 
   _setCamera() {
-    this._camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-    this._camera.position.z = 40;
+    this._camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
+    this._camera.position.z = 10;
   }
 
   _setObject() {
-    const geo = new THREE.BoxGeometry(10, 10, 10);
-    // for standard
-    // const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const geo = new THREE.PlaneBufferGeometry(4, 4);
 
     // for shader
     const mat = new THREE.ShaderMaterial({
+      // extensions: {
+      //   derivatives:"#extension GL_OES_standard_derivatives : enable"
+      // },
+      side: THREE.DoubleSide,
       uniforms: {
-        time: {type: "f", value: 1 },
-        progress: {type: "f", value: 0}
+        time: { type: "f", value: 1 },
+        progress: { type: "f", value: 0 },
+        texture: { value: "none" },
+        resolution: {type: "v4", value: new THREE.Vector4()}
       },
       vertexShader: vertex,
       fragmentShader: fragment,
