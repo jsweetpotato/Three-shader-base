@@ -5,6 +5,7 @@ uniform vec4 resolution;
 
 varying vec2 vUv;
 varying vec3 vPosition;
+varying vec3 vNormal;
 
 void main(){
   vec2 st = gl_FragCoord.xy/resolution.xy;
