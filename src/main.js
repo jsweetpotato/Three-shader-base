@@ -46,7 +46,7 @@ class App {
     this.controls = new OrbitControls(this._camera, this._container);
     console.log(this.controls);
 
-    this.controls.target = this.cube.position;
+    this.controls.target = this.obj.position;
     this.controls.rotateSpeed = 0.5;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.1;
@@ -77,24 +77,25 @@ class App {
 
     // for shader
     const mat = new THREE.ShaderMaterial({
-      // extensions: {
-      //   derivatives:"#extension GL_OES_standard_derivatives : enable"
-      // },
+      extensions: {
+        derivatives: "#extension GL_OES_standard_derivatives : enable",
+      },
       side: THREE.DoubleSide,
       uniforms: {
         time: { type: "f", value: 1 },
         progress: { type: "f", value: 0 },
         texture: { value: "none" },
-        resolution: {type: "v4", value: new THREE.Vector4()}
+        resolution: { type: "v4", value: new THREE.Vector4() },
       },
+      transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
 
     this.mat = mat;
-    const cube = new THREE.Mesh(geo, mat);
-    this.cube = cube;
-    this._scene.add(this.cube);
+    const obj = new THREE.Mesh(geo, mat);
+    this.obj = obj;
+    this._scene.add(this.obj);
   }
 
   //
