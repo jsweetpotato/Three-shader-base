@@ -44,7 +44,6 @@ class App {
 
   _setControls() {
     this.controls = new OrbitControls(this._camera, this._container);
-    console.log(this.controls);
 
     this.controls.target = this.obj.position;
     this.controls.rotateSpeed = 0.5;
@@ -76,23 +75,24 @@ class App {
     const geo = new THREE.PlaneBufferGeometry(4, 4);
 
     // for shader
+    this.uniforms = {
+      time: { type: "f", value: 1 },
+      progress: { type: "f", value: 0 },
+      texture: { value: "none" },
+      resolution: { type: "v4", value: new THREE.Vector4() },
+    };
+
     const mat = new THREE.ShaderMaterial({
       extensions: {
         derivatives: "#extension GL_OES_standard_derivatives : enable",
       },
       side: THREE.DoubleSide,
-      uniforms: {
-        time: { type: "f", value: 1 },
-        progress: { type: "f", value: 0 },
-        texture: { value: "none" },
-        resolution: { type: "v4", value: new THREE.Vector4() },
-      },
+      uniforms: this.uniforms,
       transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
 
-    this.mat = mat;
     const obj = new THREE.Mesh(geo, mat);
     this.obj = obj;
     this._scene.add(this.obj);
@@ -114,8 +114,8 @@ class App {
     this.update();
 
     // shader time update
-    this.mat.uniforms.time.value = performance.now();
-    this.mat.uniforms.progress.value = this.settings.progress;
+    this.uniforms.time.value = performance.now();
+    this.uniforms.progress.value = this.settings.progress;
   }
 
   update() {
